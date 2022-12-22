@@ -119,7 +119,7 @@ def submit(request, course_id):
         if key.startswith('choice'):
             value = request.POST[key]
             choice_id = int(value)
-            Submission.objects.create(enrollment=enrollment, choice=choice.id)
+            Submission.objects.create(enrollment=enrollment, choice=choice_id)
     return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id,)))        
 #            submitted_anwsers.append(choice_id)
     
@@ -141,7 +141,7 @@ def submit(request, course_id):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-def show_exam_result(request, course_id, submission_id):
+#def show_exam_result(request, course_id, submission_id):
 
 
 
