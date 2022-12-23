@@ -114,13 +114,17 @@ def submit(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     user = request.user
     enrollment=Enrollment.objects.get(user=user, course=course_id)
-    submitted_anwsers = []
+    submission=Submission.objects.create(enrollment=enrollment)
+    #submitted_answers = []
     for key in request.POST:
         if key.startswith('choice'):
             value = request.POST[key]
             choice_id = int(value)
-            Submission.objects.create(enrollment=enrollment, choice=choice_id)
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id,)))        
+            #submitted_answers.append(choice_id)
+            submission.choice.add(Choice.objects.get(id=choice_id))
+   # Submission.objects.create(enrollment=enrollment, choice=choice.set(submitted_answers))
+    #submission.choice.add(Choice.objects.get(submitted_answers))
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course.id,)))        
 #            submitted_anwsers.append(choice_id)
     
 
@@ -141,7 +145,10 @@ def submit(request, course_id):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-#def show_exam_result(request, course_id, submission_id):
+def show_exam_result(request, course_id, submission_id):
+    course=get_object_or_404(Course, pk=course_id)
+    submission=get_object_or_404(Submission, pk=submission_id)
+    
 
 
 
