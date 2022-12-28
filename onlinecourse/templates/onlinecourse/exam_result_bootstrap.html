@@ -49,6 +49,25 @@
         <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
             <!--HINT Display exam results-->
+            <div id="results">
+                   <!--... for each question in the course ...-->
+                {% for question in course.question_set.all %}
+                    <div class="card mt-1">
+                        <div class="card-header"><h5>{{ question.content}}</h5></div>
+                            {% csrf_token %}
+                            <div class="card-group">
+                           <!--... for each choice in the question ...-->
+                                {% for choice in question.choice_set.all %}
+                                    <div class="card-detail">
+                                        <label class="card-detail-label">
+                                                {{ choice.content }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                                                        
+                            </div>
+                        {% endfor %}
         </div>
     </div>
 </body>
