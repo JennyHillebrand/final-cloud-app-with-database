@@ -115,16 +115,17 @@ def submit(request, course_id):
     user = request.user
     enrollment=Enrollment.objects.get(user=user, course=course_id)
     submission=Submission.objects.create(enrollment=enrollment)
-    #submitted_answers = []
+    submission.save()
+    submitted_answers = []
     for key in request.POST:
         if key.startswith('choice'):
             value = request.POST[key]
             choice_id = int(value)
-            #submitted_answers.append(choice_id)
+            submitted_answers.append(choice_id)
             submission.choice.add(Choice.objects.get(id=choice_id))
    # Submission.objects.create(enrollment=enrollment, choice=choice.set(submitted_answers))
     #submission.choice.add(Choice.objects.get(submitted_answers))
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id,submission.id)))        
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id,submission.id,submitted_answers)))        
 #            submitted_anwsers.append(choice_id)
     
 
@@ -145,14 +146,14 @@ def submit(request, course_id):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-def show_exam_result(request, course_id, submission_id):
+def show_exam_result(request, course_id, submission_id, selected_ids):
     #template_name = 'onlinecourse/exam_result_bootstrap.html'
     context={}
     course=get_object_or_404(Course, pk=course_id)
     submission=get_object_or_404(Submission, pk=submission_id)
     #num_correct = submission.choice.filter(choice.correct==True).count()
-    possible_score=1
-    achieved_score=0
+    possible_score=10
+    achieved_score=8
  #   all_questions=course.question_set
  #   for question in all_questions:
  #       possible_score+=question.grade
@@ -163,7 +164,7 @@ def show_exam_result(request, course_id, submission_id):
  #           achieved_score+=question.grade
     context['grade']=int(achieved_score*100/possible_score)
     context['course']=course
-    context['selected_ids']=submission.choice
+    context['selected_ids']=selected_ids
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
 
 
