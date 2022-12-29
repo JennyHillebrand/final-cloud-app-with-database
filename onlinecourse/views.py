@@ -152,16 +152,23 @@ def show_exam_result(request, course_id, submission_id, selected_ids):
     course=get_object_or_404(Course, pk=course_id)
     submission=get_object_or_404(Submission, pk=submission_id)
     #num_correct = submission.choice.filter(choice.correct==True).count()
-    possible_score=10
-    achieved_score=8
- #   all_questions=course.question_set
- #   for question in all_questions:
- #       possible_score+=question.grade
+    possible_score=0
+    achieved_score=0
+    all_questions=course.question_set.all()
+    for question in all_questions:
+        possible_score+=question.grade
       #  def is_get_score(self, selected_ids):
- #       all_answers = question.choice_set.filter(is_correct=True).count()
- #       selected_correct = question.choice_set.filter(is_correct=True, id__in=submission.choice_set).count()
- #       if all_answers == selected_correct:
- #           achieved_score+=question.grade
+        #all_answers = question.choice_set.filter(correct_answer=True).count()
+        #selected_correct = question.choice_set.filter(correct_answer=True, id__in = selected_ids).count()
+        all_answers=0
+        all_correct=0
+        for choice in question.choice_set.all():
+            if choice.correct_answer:
+                all_answers+=1
+                if str(choice.id) in selected_ids:
+                    all_correct+=1
+        if all_answers == all_correct:
+            achieved_score+=question.grade
     context['grade']=int(achieved_score*100/possible_score)
     context['course']=course
     context['selected_ids']=selected_ids
