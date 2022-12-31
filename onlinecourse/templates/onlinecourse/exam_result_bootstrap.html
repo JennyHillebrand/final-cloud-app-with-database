@@ -50,7 +50,6 @@
     <h5 class="">Exam results</h5>
             <!--HINT Display exam results-->
         <div id="results">
-            Selected Ids {{selected_ids}}
                    <!--... for each question in the course ...-->
         {% for question in course.question_set.all %}
             <div class="card mt-1">
@@ -60,23 +59,17 @@
                            <!--... for each choice in the question ...-->
                     {% for choice in question.choice_set.all %}
                         <div class="card-detail">
-                            Test {{choice.id}}  {{selected_ids}}
-                          <!--  Submission choice {{submission.choice}} -->
-                            {% if "3" in selected_ids %}
-                                <div>
+                             <!--  Submission choice {{submission.choice}} -->
+                            {% if choice in submission.choice.all and choice.correct_answer %}
                                 <p style="color:MediumSeaGreen;"><b>Correct answer: {{choice.content}}</b></p>
-                                </div>
-                            {% elif choice.id == 1 %}
+                            {% elif choice not in submission.choice.all and choice.correct_answer %}
                                 <p style="color:Orange;"><b>Not selected: {{choice.content}}</b></p>
-                            {% elif choice.id not in selected_ids and choice.correct_answer % }
-                                <p style="color:Orange;"><b>Not selected: {{choice.content}}</b></p>
-                            {% elif choice.id in selected_ids and not choice.correct_answer %}    
+                            {% elif choice in submission.choice.all and not choice.correct_answer %}    
                                 <p style="color:Red;"><b>Incorrectly selected: {{choice.content}}</b></p>
                             {% else %}
-                                <p> {{choice.id}} {{choice.content}} {{choice.correct_answer}} </p>
+                                <p> {{choice.content}} </p>
                             {% endif %}
 
-                        <!--    <p>{{ choice.content }}</p> -->
                         </div>
                     {% endfor %}
                     </div>
